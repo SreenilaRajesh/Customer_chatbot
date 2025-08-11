@@ -1,7 +1,9 @@
 crawl4ai
 langchain-community
 langchain-huggingface
-sentence-transformers
-qdrant-client[fastembed]
-unstructured
 markdown
+ollama
+qdrant-client[fastembed]
+sentence-transformers
+unstructured
+

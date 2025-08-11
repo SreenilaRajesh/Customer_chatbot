@@ -1,5 +1,3 @@
-
-
 import os
 import asyncio
 from crawl4ai import AsyncWebCrawler, CacheMode, CrawlerRunConfig
@@ -7,14 +5,12 @@ from crawl4ai import AsyncWebCrawler, CacheMode, CrawlerRunConfig
 input_folder = r"C:\Users\visah\Documents\GitHub\Autodesk\Autodesk\pages"  # Folder containing HTML files
 output_folder = r"C:\Users\visah\Documents\GitHub\Autodesk_Chatbot\markdown_files_crawler"  # Folder to save Markdown files
 
-
 async def convert_html_to_md(crawler, html_file):
     file_url = f"file://{html_file}"
     config = CrawlerRunConfig(cache_mode=CacheMode.BYPASS)
 
     result = await crawler.arun(url=file_url, config=config)
     if result.success:
-        # Save markdown with same filename but .md extension
         md_filename = os.path.splitext(os.path.basename(html_file))[0] + ".md"
         md_path = os.path.join(output_folder, md_filename)
         with open(md_path, "w", encoding="utf-8") as f:
