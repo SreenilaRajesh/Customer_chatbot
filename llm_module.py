@@ -25,7 +25,7 @@ def ask_ollama(query, context, model_name):
     return response['message']['content']
 
 
-if __name__ == "__main__":
+'''if __name__ == "__main__":
 
     print("Chat with Autodesk Chatbot (type 'exit' to quit)")
     while True:
@@ -38,4 +38,4 @@ if __name__ == "__main__":
         context = "\n\n".join(retrieved)
         #print(context)
         answer = ask_ollama(query, context, config.OLLAMA_MODEL)
-        print(f"Response: {answer}")
+        print(f"Response: {answer}")'''

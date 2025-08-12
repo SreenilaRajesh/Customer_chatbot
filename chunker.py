@@ -10,6 +10,7 @@ def load_markdown_documents(folder_path):
                 file_path = os.path.join(root, file)
                 loader = UnstructuredMarkdownLoader(file_path)
                 docs.extend(loader.load())
+                
     return docs
 
 def chunk_documents(documents, chunk_size=1000, chunk_overlap=100):
