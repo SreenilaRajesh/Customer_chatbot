@@ -11,11 +11,14 @@ class Indexer:
         self.batch_size = config.EMBEDDING_BATCH_SIZE
 
     def __index_chunks(self, chunks, metadata, collection_name):
-        for i in range(0, len(chunks), self.batch_size):
+        for i in range(1000, len(chunks), self.batch_size):
+           #print(i)
             batch_chunks_embeddings_list = list(
                 self.embedding_model.embed(chunks[i:i + self.batch_size])
             )
-            chunks_list = [{'text': chunk, 'source': metadata[i]['source']} for i, chunk in enumerate(chunks[i:i + self.batch_size])]
+            chunks_list = [{'text': chunk, 'source': metadata[i+j]['source']} 
+                           for j, chunk in enumerate(chunks[i:i + self.batch_size])]
+            #print(batch_chunks_embeddings_list, chunks_list)
             qdrant_operations.upload_points_to_collection(
                 qdrant_client=self.client,
                 collection_name=collection_name,
@@ -35,9 +38,9 @@ class Indexer:
         self.__index_chunks(all_texts, metadata, config.COLLECTION_NAME)
 
 
-'''if __name__ == "__main__":
+if __name__ == "__main__":
     indexer = Indexer()
-    indexer.index_files()'''
+    indexer.index_files()
 
 
 

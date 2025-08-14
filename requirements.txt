@@ -1,6 +1,7 @@
 crawl4ai
 gradio
 langchain-community
+langchain_ollama
 langchain-huggingface
 markdown
 ollama
