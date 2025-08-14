@@ -7,6 +7,9 @@ import config
 from fastapi.staticfiles import StaticFiles
 from llm_module2 import LLMService
 
+# Reuse a single LLMService instance so conversation memory persists across turns
+llm_service = LLMService()
+
 def convert_src_to_html_path(src: str) -> str:
     """Return an HTTP link served from /sources without using a local 'static' folder.
 
@@ -30,10 +33,19 @@ def respond(message: str, history: List[Tuple[str, str]]) -> Tuple[str, List[Tup
     try:
         retriever = Retriever()
         # Use previous turn to disambiguate underspecified queries (e.g., "latest version")
-        prev_question = history[-1][0] if history else ""
+        #prev_question = history[-1][0] if history else ""
+        prev_question = ". ".join(turn[0] for turn in history) if history else ""
         combined_query = f"{message} In the context of: {prev_question}" if prev_question else message
+        #combined_query = message
         retrieved_chunks, retrieved_sources = retriever.retrieve_chunks(config.COLLECTION_NAME, combined_query, k=5)
         context_md = "\n\n".join(retrieved_chunks)
+
+        print(f"\nHistory: {history}")
+        print(f"\nMessage: {message}")
+        print(f"\nPrevious question: {prev_question}")
+        print(f"\nCombined query: {combined_query}")
+        print(f"\nRetrieved chunks: {retrieved_chunks}")
+        print(f"\nContext MD: {context_md}")
 
         # Render each dict one below the other in Markdown
         blocks = []
@@ -47,7 +59,6 @@ def respond(message: str, history: List[Tuple[str, str]]) -> Tuple[str, List[Tup
             block = f"**{src_display}**\n\n{text}"
             blocks.append(block)
         context_view = "\n\n---\n\n".join(blocks) if blocks else "(no context retrieved)"
-        llm_service = LLMService()
         answer = llm_service.llm_query(message, context_md)
         # answer = ask_ollama(message, context_md, model_name=config.OLLAMA_MODEL)
     except Exception as exc:
